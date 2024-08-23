@@ -1,0 +1,163 @@
+import React, { useState, useEffect } from 'react';
+import { Text, View, TextInput, Button, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import axios from 'axios';
+
+const AfroQuotesGenerator = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [user, setUser] = useState(null);
+  const [quote, setQuote] = useState('');
+  const [author, setAuthor] = useState('');
+  const [favoriteQuotes, setFavoriteQuotes] = useState([]);
+  const [showModal, setShowModal] = useState(true);
+
+  // Function to fetch a random quote using ZenQuotes API
+  const fetchRandomQuote = async () => {
+    try {
+      const response = await axios.get('https://zenquotes.io/api/quotes?search=');
+      const quotes = response.data;
+      const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+      setQuote(randomQuote.q);
+      setAuthor(randomQuote.a);
+    } catch (error) {
+      console.error('Error fetching quote:', error);
+      setQuote('Failed to fetch a quote. Please try again later.');
+    }
+  };
+
+  // Signup and Login functions (replace with your backend API calls)
+  const handleSignup = async (username, email, password) => {
+    try {
+      // Call your backend API for user signup
+      const response = await axios.post('YOUR_BACKEND_API_URL/signup', { username, email, password });
+      const data = response.data;
+      // Handle successful signup (e.g., show a message, redirect)
+      console.log('Signup successful:', data);
+      setIsLoggedIn(true);
+      setUser(data.user);
+    } catch (error) {
+      console.error('Error signing up:', error);
+    }
+  };
+
+  const handleLogin = async (usernameOrEmail, password) => {
+    try {
+      // Call your backend API for user login
+      const response = await axios.post('YOUR_BACKEND_API_URL/login', { usernameOrEmail, password });
+      const data = response.data;
+      // Handle successful login (e.g., store token, update user state)
+      setIsLoggedIn(true);
+      setUser(data.user);
+      localStorage.setItem('authToken', data.token);
+    } catch (error) {
+      console.error('Error logging in:', error);
+    }
+  };
+
+  const handleSaveFavorite = async (quoteId) => {
+    if (!isLoggedIn) {
+      console.error('User needs to be logged in to save favorites');
+      return;
+    }
+
+    // Call your backend API to save the favorite quote
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await axios.post('YOUR_BACKEND_API_URL/favorites', { quoteId }, { headers: { Authorization: `Bearer ${token}` } });
+      const data = response.data;
+      // Handle successful saving (e.g., update favorite quotes state)
+      setFavoriteQuotes([...favoriteQuotes, quoteId]);
+    } catch (error) {
+      console.error('Error saving favorite:', error);
+    }
+  };
+
+  // Fetch a random quote on initial render
+  useEffect(() => {
+    fetchRandomQuote();
+  }, []);
+
+  return (
+    <View style={styles.container}>
+      <Modal visible={showModal} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <View style={styles.form}>
+            <TextInput style={styles.input} placeholder="Username/Email" placeholderTextColor="gray" />
+            <TextInput style={styles.input} placeholder="Password" secureTextEntry placeholderTextColor="gray" />
+            <Button title="Login" onPress={handleLogin} />
+            <Button title="Signup" onPress={handleSignup} />
+          </View>
+        </View>
+      </Modal>
+
+      {isLoggedIn ? (
+        <>
+          <Text>Welcome, {user.username}</Text>
+          <TouchableOpacity onPress={() => handleSaveFavorite(quote)}>
+            <Text>Save as Favorite</Text>
+          </TouchableOpacity>
+          {/* Display list of favorite quotes (implement logic) */}
+        </>
+      ) : (
+        <TouchableOpacity onPress={() => setShowModal(true)}>
+          <Text>Login/Signup</Text>
+        </TouchableOpacity>
+      )}
+
+      <Text style={styles.quoteText}>{quote}</Text>
+      <Text style={styles.authorText}>- {author}</Text>
+      <TouchableOpacity style={styles.button} onPress={fetchRandomQuote}>
+        <Text style={styles.buttonText}>Get New Quote</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  form: {
+    backgroundColor: 'gold',
+    padding: 100,
+    borderRadius: 65,
+  },
+  input: {
+    height: 60,
+    borderColor: 'black',
+    borderWidth: 5,
+    marginBottom: 10,
+    padding: 10,
+    color: 'black',
+  },
+  quoteText: {
+    fontSize: 24,
+    color: 'gold',
+    textAlign: 'center',
+  },
+  authorText: {
+    fontSize: 18,
+    color: 'gray',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  button: {
+    backgroundColor: 'gold',
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: 'black',
+    fontWeight: 'bold',
+  },
+});
+
+export default AfroQuotesGenerator;
