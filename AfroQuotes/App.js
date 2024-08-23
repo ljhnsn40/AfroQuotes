@@ -10,7 +10,7 @@ const AfroQuotesGenerator = () => {
   const [favoriteQuotes, setFavoriteQuotes] = useState([]);
   const [showModal, setShowModal] = useState(true);
 
-  // Function to fetch a random quote using ZenQuotes API
+
   const fetchRandomQuote = async () => {
     try {
       const response = await axios.get('https://zenquotes.io/api/quotes?search=');
@@ -30,7 +30,6 @@ const AfroQuotesGenerator = () => {
       // Call your backend API for user signup
       const response = await axios.post('YOUR_BACKEND_API_URL/signup', { username, email, password });
       const data = response.data;
-      // Handle successful signup (e.g., show a message, redirect)
       console.log('Signup successful:', data);
       setIsLoggedIn(true);
       setUser(data.user);
@@ -44,7 +43,6 @@ const AfroQuotesGenerator = () => {
       // Call your backend API for user login
       const response = await axios.post('YOUR_BACKEND_API_URL/login', { usernameOrEmail, password });
       const data = response.data;
-      // Handle successful login (e.g., store token, update user state)
       setIsLoggedIn(true);
       setUser(data.user);
       localStorage.setItem('authToken', data.token);
@@ -64,14 +62,12 @@ const AfroQuotesGenerator = () => {
       const token = localStorage.getItem('authToken');
       const response = await axios.post('YOUR_BACKEND_API_URL/favorites', { quoteId }, { headers: { Authorization: `Bearer ${token}` } });
       const data = response.data;
-      // Handle successful saving (e.g., update favorite quotes state)
       setFavoriteQuotes([...favoriteQuotes, quoteId]);
     } catch (error) {
       console.error('Error saving favorite:', error);
     }
   };
 
-  // Fetch a random quote on initial render
   useEffect(() => {
     fetchRandomQuote();
   }, []);
