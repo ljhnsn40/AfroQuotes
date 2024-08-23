@@ -18,3 +18,4 @@ AfroQuotes is designed to be a source of daily inspiration. The app highlights p
 - **Database**: [Your database, e.g., Firebase Firestore, MongoDB, etc.]
 - **Authentication**: [Your authentication method, e.g., Firebase Authentication, OAuth, etc.]
 
+## App Links
