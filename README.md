@@ -14,8 +14,8 @@ AfroQuotes is designed to be a source of daily inspiration. The app highlights p
 ## Technologies Used
 - **Framework**: React Native (using Expo for development and deployment)
 - **State Management**: React Hooks 
-- **Back-End**: [Express server]
-- **Database**: [MongoDB]
-- **Authentication**: [Auth0]
+- **Back-End**: Express server
+- **Database**: MongoDB
+- **Authentication**: Auth0
 
 ## App Links
