@@ -93,7 +93,7 @@ app.get('/api/auth/status', (req, res) => {
   res.json({ isAuthenticated: !!req.user });
 });
 
-// Start the server
+// this is to start the server
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
