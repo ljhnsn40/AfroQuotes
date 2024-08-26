@@ -91,7 +91,7 @@ const AfroQuotesGenerator = () => {
           <TouchableOpacity onPress={() => handleSaveFavorite(quote)}>
             <Text>Save as Favorite</Text>
           </TouchableOpacity>
-          {/* Display list of favorite quotes (implement logic) */}
+          { }
         </>
       ) : (
         <TouchableOpacity onPress={() => setShowModal(true)}>
