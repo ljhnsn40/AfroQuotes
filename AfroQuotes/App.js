@@ -24,11 +24,22 @@ const AfroQuotesGenerator = () => {
     }
   };
 
-  // Signup and Login functions (replace with your backend API calls)
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      axios.get('http://localhost:3001/api/auth/status', { headers: { Authorization: `Bearer ${token}` } })
+        .then(response => {
+          setIsLoggedIn(response.data.isAuthenticated);
+        })
+        .catch(error => console.error('Error checking authentication status:', error));
+    }
+  }, []);
+
+  // Signup and Login functions (
   const handleSignup = async (username, email, password) => {
     try {
-      // Call your backend API for user signup
-      const response = await axios.post('YOUR_BACKEND_API_URL/signup', { username, email, password });
+      // this is a call to backend for user signup
+      const response = await axios.post('http://localhost:3001/api/signup', { username, email, password });
       const data = response.data;
       console.log('Signup successful:', data);
       setIsLoggedIn(true);
@@ -40,8 +51,8 @@ const AfroQuotesGenerator = () => {
 
   const handleLogin = async (usernameOrEmail, password) => {
     try {
-      // Call your backend API for user login
-      const response = await axios.post('YOUR_BACKEND_API_URL/login', { usernameOrEmail, password });
+      // this is a call to the backend for userLogin
+      const response = await axios.post('http://localhost:3001/api/login', { usernameOrEmail, password });
       const data = response.data;
       setIsLoggedIn(true);
       setUser(data.user);
@@ -57,10 +68,10 @@ const AfroQuotesGenerator = () => {
       return;
     }
 
-    // Call your backend API to save the favorite quote
+    // this is a call to the backend to save the favorite quote
     try {
       const token = localStorage.getItem('authToken');
-      const response = await axios.post('YOUR_BACKEND_API_URL/favorites', { quoteId }, { headers: { Authorization: `Bearer ${token}` } });
+      const response = await axios.post('http://localhost:3001/api/favorites', { quoteId }, { headers: { Authorization: `Bearer ${token}` } });
       const data = response.data;
       setFavoriteQuotes([...favoriteQuotes, quoteId]);
     } catch (error) {
